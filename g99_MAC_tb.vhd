@@ -68,7 +68,28 @@ feeding_instr : process is
   	wait until rising_edge(clk);
   	rst <= '0';
 
-  	file_open
+  	file_open(file_VECTORS_X,"lab1-x-fixed-point.txt",read_mode);
+  	file_open(file_VECTORS_Y,"lab1-y-fixed-point.txt",read_mode);
+  	file_open(file_RESULTS,"lab1-out.txt",write_mode);
+
+  while not endfile(file_VECTORS_X) loop
+  	readline(file_VECTORS_X,v_Iline1);
+  	read(v_Iline1,v_x_in);
+  	readline(file_VECTORS_Y,v_Iline2);
+  	read(v_Ilinew,v_y_in);
+
+  	x_in <= v_x_in;
+  	y_in <= v_y_in;
+
+  	wait until rising_edge(clk);
+  end loop;
+
+  if ready_out ='1' then
+  	write(v_Oline,mac_out);
+  	writeline(file_RESULTS, v_Oline);
+  	wait;
+  end if;
+ end process
 
 
 end architecture test;
